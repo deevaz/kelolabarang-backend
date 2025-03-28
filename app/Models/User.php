@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -30,6 +30,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
+        'profile_picture',
         'email',
         'password',
     ];
