@@ -15,15 +15,12 @@ class Products extends Model
         'stok_awal',
         'harga_beli',
         'harga_jual',
-        // 'harga_grosir',
         'kadaluarsa',
         'deskripsi',
         'vendor',
         'gambar',
         'kategori',
         'total_stok',
-        'stok_masuk',
-        'stok_keluar',
         'user_id',
     ];
 }

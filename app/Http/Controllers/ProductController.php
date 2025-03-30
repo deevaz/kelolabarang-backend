@@ -3,25 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Models\Products;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($userId)
     {
-
-            $products = Product::all();
-            return response()->json($products);
-
+        $products = Products::where('user_id', $userId)->get();
+        return response()->json($products);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $userId)
     {
         $data = $request->validate([
             'kode_barang' => 'nullable|string',
@@ -29,19 +27,21 @@ class ProductController extends Controller
             'stok_awal' => 'required|integer',
             'harga_beli' => 'required|numeric',
             'harga_jual' => 'required|numeric',
-            'harga_grosir' => 'required|numeric',
             'kadaluarsa' => 'required|date',
             'deskripsi' => 'nullable|string',
-            'vendor' => 'nullable|string',
-            'gambar' => 'nullable|string',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'kategori' => 'nullable|string',
             'total_stok' => 'required|integer',
-            'stok_masuk' => 'nullable|integer',
-            'stok_keluar' => 'nullable|integer',
-            'userId' => 'required|integer'
         ]);
+        $gambarPath = null;
+        if ($request->hasFile('gambar')) {
+            $gambarPath = $request->file('gambar')->store('gambar_barang', 'public');
+            $data['gambar'] = $gambarPath;
+        }
 
-        $product = Product::create($data);
+        $data['user_id'] = $userId;
+
+        $product = Products::create($data);
 
         return response()->json([
             'message' => 'Produk berhasil ditambahkan',
@@ -52,14 +52,12 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($userId, $id)
     {
-        $product = Product::find($id);
+        $product = Products::where('user_id', $userId)->where('id', $id)->first();
 
         if (!$product) {
-            return response()->json([
-                'message' => 'Produk tidak ditemukan'
-            ], 404);
+            return response()->json(['message' => 'Produk tidak ditemukan'], 404);
         }
 
         return response()->json($product);
@@ -68,47 +66,72 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $userId, $id)
     {
-        $product = Product::find($id);
+        $product = Products::where('user_id', $userId)->where('id', $id)->first();
 
         if (!$product) {
-            return response()->json([
-                'message' => 'Produk tidak ditemukan'
-            ], 404);
+            return response()->json(['message' => 'Produk tidak ditemukan'], 404);
         }
 
         $data = $request->validate([
-            'kode_barang' => 'nullable|string',
+            'kode_barang' => 'required|string',
             'nama_barang' => 'required|string',
             'stok_awal' => 'required|integer',
             'harga_beli' => 'required|numeric',
             'harga_jual' => 'required|numeric',
-            'harga_grosir' => 'required|numeric',
             'kadaluarsa' => 'required|date',
-            'deskripsi' => 'nullable|string',
-            'vendor' => 'nullable|string',
-            'gambar' => 'nullable|string',
-            'kategori' => 'nullable|string',
+            'deskripsi' => 'required|string',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'kategori' => 'required|string',
             'total_stok' => 'required|integer',
-            'stok_masuk' => 'nullable|integer',
-            'stok_keluar' => 'nullable|integer',
-            'userId' => 'required|integer'
+
         ]);
 
-        $product->update($data);
+        if ($request->hasFile('gambar')) {
+            $gambarPath = $request->file('gambar')->store('gambar_barang', 'public');
+            $data['gambar'] = $gambarPath;
+        }
+        $product = Products::find($request->id);
 
-        return response()->json([
-            'message' => 'Produk berhasil diperbarui',
-            'data' => $product
-        ]);
+        if ($product) {
+            $product->kode_barang = $request->kode_barang;
+            $product->nama_barang = $request->nama_barang;
+            $product->stok_awal = $request->stok_awal;
+            $product->harga_beli = $request->harga_beli;
+            $product->harga_jual = $request->harga_jual;
+            $product->kadaluarsa = $request->kadaluarsa;
+            $product->deskripsi = $request->deskripsi;
+            if ($gambarPath) {
+                $product->gambar = $gambarPath;
+            }
+            $product->kategori = $request->kategori;
+            $product->total_stok = $request->total_stok;
+
+
+            $product->save();
+
+            return response()->json([
+                'message' => 'Produk berhasil diperbarui',
+                'data' => $product
+            ]);
+        } else {
+        return response()->json(['message' => 'Produk tidak ditemukan'], 404);}
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($userId, $id)
     {
+        $product = Products::where('user_id', $userId)->where('id', $id)->first();
 
+        if (!$product) {
+            return response()->json(['message' => 'Produk tidak ditemukan'], 404);
+        }
+
+        $product->delete();
+
+        return response()->json(['message' => 'Produk berhasil dihapus']);
     }
 }
