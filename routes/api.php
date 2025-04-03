@@ -23,9 +23,18 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user', [AuthController::class, 'userProfile']);
+
+    // crud products
     Route::get('/products/{userId}', [ProductController::class, 'index']);
     Route::post('/products/{userId}', [ProductController::class, 'store']);
     Route::get('/products/{userId}/{id}', [ProductController::class, 'show']);
     Route::put('/products/{userId}/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{userId}/{id}', [ProductController::class, 'destroy']);
+
+    // crud suppliers
+    Route::get('/suppliers/{userId}', [ProductController::class, 'index']);
+    Route::post('/suppliers/{userId}', [ProductController::class, 'store']);
+    Route::get('/suppliers/{userId}/{id}', [ProductController::class, 'show']);
+    Route::put('/suppliers/{userId}/{id}', [ProductController::class, 'update']);
+    Route::delete('/suppliers/{userId}/{id}', [ProductController::class, 'destroy']);
 });
