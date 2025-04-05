@@ -41,6 +41,7 @@ class SuppliersController extends Controller
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Data tidak valid',
                 'errors' => $validator->errors()
             ], 422);
@@ -48,6 +49,7 @@ class SuppliersController extends Controller
 
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Supplier berhasil ditambahkan',
             'data' => $data
         ], 201);
@@ -61,7 +63,9 @@ class SuppliersController extends Controller
         $supplier = Suppliers::where('user_id', $userId)->where('id', $id)->first();
 
         if(!$supplier) {
-            return response()->json(['message' => 'Supplier tidak ditemukan'], 404);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Supplier tidak ditemukan'], 404);
         }
 
         return response()->json($supplier);
@@ -102,7 +106,7 @@ class SuppliersController extends Controller
 
 
         return response()->json([
-            'status' => 'true',
+            'status' => 'success',
             'message' => 'Supplier berhasil diperbaharui',
             'data' => $data
         ], 201);
@@ -116,11 +120,16 @@ class SuppliersController extends Controller
         $supplier = Suppliers::where('user_id', $userId)->where('id', $id)->first();
 
         if (!$supplier) {
-            return response()->json(['message' => 'Supplier tidak ditemukan'], 404);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Supplier tidak ditemukan'
+            ], 404);
         }
 
         $supplier->delete();
 
-        return response()->json(['message' => 'Supplier berhasil dihapus']);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Supplier berhasil dihapus']);
     }
 }

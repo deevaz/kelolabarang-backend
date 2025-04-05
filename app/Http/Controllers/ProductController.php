@@ -44,6 +44,7 @@ class ProductController extends Controller
         $product = Products::create($data);
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Produk berhasil ditambahkan',
             'data' => $product
         ], 201);
@@ -71,7 +72,9 @@ class ProductController extends Controller
         $product = Products::where('user_id', $userId)->where('id', $id)->first();
 
         if (!$product) {
-            return response()->json(['message' => 'Produk tidak ditemukan'], 404);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Produk tidak ditemukan'], 404);
         }
 
         $data = $request->validate([
@@ -112,11 +115,14 @@ class ProductController extends Controller
             $product->save();
 
             return response()->json([
+                'status' => 'success',
                 'message' => 'Produk berhasil diperbarui',
                 'data' => $product
             ]);
         } else {
-        return response()->json(['message' => 'Produk tidak ditemukan'], 404);}
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Produk tidak ditemukan'], 404);}
     }
 
     /**
@@ -132,6 +138,8 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return response()->json(['message' => 'Produk berhasil dihapus']);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Produk berhasil dihapus']);
     }
 }
