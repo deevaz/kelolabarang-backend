@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SuppliersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,9 +33,9 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::delete('/products/{userId}/{id}', [ProductController::class, 'destroy']);
 
     // crud suppliers
-    Route::get('/suppliers/{userId}', [ProductController::class, 'index']);
-    Route::post('/suppliers/{userId}', [ProductController::class, 'store']);
-    Route::get('/suppliers/{userId}/{id}', [ProductController::class, 'show']);
-    Route::put('/suppliers/{userId}/{id}', [ProductController::class, 'update']);
-    Route::delete('/suppliers/{userId}/{id}', [ProductController::class, 'destroy']);
+    Route::get('/suppliers/{userId}', [SuppliersController::class, 'index']);
+    Route::post('/suppliers/{userId}', [SuppliersController::class, 'store']);
+    Route::get('/suppliers/{userId}/{id}', [SuppliersController::class, 'show']);
+    Route::put('/suppliers/{userId}/{id}', [SuppliersController::class, 'update']);
+    Route::delete('/suppliers/{userId}/{id}', [SuppliersController::class, 'destroy']);
 });

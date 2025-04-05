@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Suppliers;
+use Illuminate\Support\Facades\Validator;
 
 class SuppliersController extends Controller
 {
@@ -22,20 +23,33 @@ class SuppliersController extends Controller
      */
     public function store(Request $request, $userId)
     {
-        $data = $request->validate([
+        $data = new Suppliers();
+        $data->nama_supplier = $request->nama_supplier;
+        $data->no_telp = $request->no_telp;
+        $data->no_rekening = $request->no_rekening;
+        $data->catatan = $request->catatan;
+        $data->user_id = $userId;
+        $data->save();
+
+        $rules = [
             'nama_supplier' => 'required|string',
-            'no_rekening' => 'nullable|string',
             'no_telp' => 'nullable|string',
+            'no_rekening' => 'nullable|string',
             'catatan' => 'nullable|string',
-        ]);
+        ];
 
-        $data['user_id'] = $userId;
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Data tidak valid',
+                'errors' => $validator->errors()
+            ], 422);
+        }
 
-        $supplier = Suppliers::create($data);
 
         return response()->json([
             'message' => 'Supplier berhasil ditambahkan',
-            'data' => $supplier
+            'data' => $data
         ], 201);
     }
 
@@ -58,38 +72,41 @@ class SuppliersController extends Controller
      */
     public function update(Request $request, $userId, $id)
     {
-        $supplier = Suppliers::where('user_id', $userId)->where('id', $id)->first();
+        $rules = [
+            'nama_supplier' => 'required|string',
+            'no_telp' => 'nullable|string',
+            'no_rekening' => 'nullable|string',
+            'catatan' => 'nullable|string',
+        ];
 
-        if (!$supplier) {
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'false',
+                'message' => 'Data tidak valid',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $data = Suppliers::where('user_id', $userId)->where('id', $id)->first();
+        if (!$data) {
             return response()->json(['message' => 'Supplier tidak ditemukan'], 404);
         }
 
-        $data = $request->validate([
-            'nama_supplier' => 'required|string',
-            'no_telp' => 'nullable|string',
-            'no_Rekening' => 'nullable|string',
-            'catatan' => 'nullable|string',
-        ]);
-
-        $supplier = Suppliers::find($request->id);
-
-        if ($supplier) {
-            $supplier->nama_supplier = $request->nama_supplier;
-            $supplier->no_telp = $request->no_telp;
-            $supplier->no_Rekening = $request->no_Rekening;
-            $supplier->catatan = $request->catatan;
-
-            $supplier->save();
-
-            return response()->json([
-            'message' => 'Supplier berhasil diperbarui',
-            'data' => $supplier
-        ]);
-        } else {
-            return response()->json(['message' => 'Supplier tidak ditemukan'], 404);
+        $data->nama_supplier = $request->nama_supplier;
+        $data->no_telp = $request->no_telp;
+        $data->no_rekening = $request->no_rekening;
+        $data->catatan = $request->catatan;
+        $data->user_id = $userId;
+        $data->save();
 
 
-    }}
+        return response()->json([
+            'status' => 'true',
+            'message' => 'Supplier berhasil diperbaharui',
+            'data' => $data
+        ], 201);
+    }
 
     /**
      * Remove the specified resource from storage.
