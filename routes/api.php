@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SuppliersController;
+use App\Http\Controllers\BusinessController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,4 +39,11 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/suppliers/{userId}/{id}', [SuppliersController::class, 'show']);
     Route::put('/suppliers/{userId}/{id}', [SuppliersController::class, 'update']);
     Route::delete('/suppliers/{userId}/{id}', [SuppliersController::class, 'destroy']);
+
+    // crud business
+    Route::get('/business/{userId}', [BusinessController::class, 'index']);
+    Route::post('/business/{userId}', [BusinessController::class, 'store']);
+    Route::get('/business/{userId}/{id}', [BusinessController::class, 'show']);
+    Route::put('/business/{userId}/{id}', [BusinessController::class, 'update']);
+    Route::delete('/business/{userId}/{id}', [BusinessController::class, 'destroy']);
 });

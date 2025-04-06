@@ -14,7 +14,11 @@ class SuppliersController extends Controller
     public function index($userId)
     {
         $suppliers = Suppliers::where('user_id', $userId)->get();
-        return response()->json($suppliers);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Supplier berhasil diambil',
+            'data' => $suppliers
+        ], 200);
     }
 
 
@@ -68,7 +72,13 @@ class SuppliersController extends Controller
                 'message' => 'Supplier tidak ditemukan'], 404);
         }
 
-        return response()->json($supplier);
+        return response()->json(
+            [
+                'status' => 'success',
+                'message' => 'Supplier berhasil diambil',
+                'data' => $supplier
+            ], 200
+        );
     }
 
     /**

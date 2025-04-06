@@ -13,7 +13,11 @@ class ProductController extends Controller
     public function index($userId)
     {
         $products = Products::where('user_id', $userId)->get();
-        return response()->json($products);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Produk berhasil diambil',
+            'data' => $product
+        ], 200);
     }
 
     /**
@@ -61,7 +65,13 @@ class ProductController extends Controller
             return response()->json(['message' => 'Produk tidak ditemukan'], 404);
         }
 
-        return response()->json($product);
+        return response()->json(
+            [
+                'status' => 'success',
+                'message' => 'Produk berhasil diambil',
+                'data' => $product
+            ], 200
+        );
     }
 
     /**
