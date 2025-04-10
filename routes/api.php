@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\StockInController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,4 +47,11 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/business/{userId}/{id}', [BusinessController::class, 'show']);
     Route::put('/business/{userId}/{id}', [BusinessController::class, 'update']);
     Route::delete('/business/{userId}/{id}', [BusinessController::class, 'destroy']);
+
+    // crud stock-in
+    Route::get('/stockin/{userId}', [StockInController::class, 'index']);
+    Route::post('/stockin/{userId}', [StockInController::class, 'store']);
+    Route::get('/stockin/{userId}/{id}', [StockInController::class, 'show']);
+    Route::put('/stockin/{userId}/{id}', [StockInController::class, 'update']);
+    Route::delete('/stockin/{userId}/{id}', [StockInController::class, 'destroy']);
 });

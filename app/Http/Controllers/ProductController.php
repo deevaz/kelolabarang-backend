@@ -16,7 +16,7 @@ class ProductController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Produk berhasil diambil',
-            'data' => $product
+            'data' => $products
         ], 200);
     }
 
@@ -128,7 +128,7 @@ class ProductController extends Controller
                 'status' => 'success',
                 'message' => 'Produk berhasil diperbarui',
                 'data' => $product
-            ]);
+            ], 200);
         } else {
         return response()->json([
             'status' => 'error',
