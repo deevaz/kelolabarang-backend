@@ -12,11 +12,11 @@ class StockOutItems extends Model
     protected $table = 'stock_out_items';
 
     protected $fillable = [
-        'stock_out_id',
-        'item_id',
-        'quantity',
-        'created_at',
-        'updated_at',
+        'nama',
+        'harga',
+        'jumlah_stok_keluar',
+        'total_stok',
+        'user_id',
     ];
 
     public function stockOut()

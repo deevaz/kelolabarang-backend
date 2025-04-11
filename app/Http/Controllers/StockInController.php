@@ -65,6 +65,8 @@ class StockInController extends Controller
             'catatan' => 'nullable|string|max:255',
             'tanggal_masuk' => 'required|date',
             'total_harga' => 'required|numeric',
+
+
             'barang' => 'required|array',
             'barang.*.nama' => 'required|string|max:255',
             'barang.*.harga' => 'required|numeric',
@@ -73,6 +75,7 @@ class StockInController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
@@ -144,7 +147,7 @@ class StockInController extends Controller
         if (!$stockIn) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Stock-in tidak ditemukan'
+                'message' => 'Stok tidak ditemukan'
             ], 404);
         }
 
@@ -153,7 +156,7 @@ class StockInController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Stock-in berhasil dihapus'
+            'message' => 'Stok berhasil dihapus'
         ], 200);
     }
 }
