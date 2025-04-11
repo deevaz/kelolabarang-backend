@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Models\StockOut;
 use App\Models\StockOutItems;
+use Illuminate\Support\Facades\DB;
+use App\Models\Products;
 
 class StockOutController extends Controller
 {
@@ -49,13 +51,7 @@ class StockOutController extends Controller
      */
     public function store(Request $request, $userId)
     {
-        $data = new StockOut();
-        $data->pembeli = $request->pembeli;
-        $data->catatan = $request->catatan;
-        $data->tanggal_keluar = $request->tanggal_keluar;
-        $data->total_harga = $request->total_harga;
-        $data->user_id = $userId;
-        $data->save();
+
 
         $rules = [
             'pembeli' => 'required',
@@ -81,40 +77,70 @@ class StockOutController extends Controller
             ], 422);
         }
 
-        $barangData = [];
-        foreach ($request->barang as $item) {
-            $barangData[] = new StockOutItems([
-                'stock_out_id' => $data->id,
-                'nama' => $item['nama'],
-                'harga' => $item['harga'],
-                'jumlah_stok_keluar' => $item['jumlah_stok_keluar'],
-                'total_stok' => $item['total_stok'],
-                'user_id' => $userId,
-            ]);
+        try {
+            $data = new StockOut();
+            $data->pembeli = $request->pembeli;
+            $data->catatan = $request->catatan;
+            $data->tanggal_keluar = $request->tanggal_keluar;
+            $data->total_harga = $request->total_harga;
+            $data->user_id = $userId;
+            $data->save();
+
+            $barangData = [];
+            foreach ($request->barang as $item) {
+                $product = Products::where('nama_barang', $item['nama'])->first();
+
+                if ($product) {
+                    $product->decrement('total_stok', $item['jumlah_stok_keluar']);
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Barang tidak ditemukan: ' . $item['nama']
+                    ], 404);
+                }
+                $barangData[] = new StockOutItems([
+                    'stock_out_id' => $data->id,
+                    'nama' => $item['nama'],
+                    'harga' => $item['harga'],
+                    'jumlah_stok_keluar' => $item['jumlah_stok_keluar'],
+                    'total_stok' => $item['total_stok'],
+                    'user_id' => $userId,
+                ]);
+            }
+
+            $data->items()->saveMany($barangData);
+
+            DB::commit();
+
+            $responseData = [
+                'id' => (string) $data->id,
+                'pembeli' => $data->pembeli,
+                'catatan' => $data->catatan,
+                'tanggal_keluar' => $data->tanggal_keluar,
+                'total_harga' => $data->total_harga,
+                'barang' => $data->items->map(function ($barang) {
+                    return [
+                        'nama' => $barang->nama,
+                        'harga' => $barang->harga,
+                        'jumlah_stok_keluar' => $barang->jumlah_stok_keluar,
+                        'total_stok' => $barang->total_stok,
+                    ];
+                }),
+            ];
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Stock-out berhasil ditambahkan',
+                'data' => $responseData
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan saat menambahkan stock-out',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $data->items()->saveMany($barangData);
-
-        $responseData = [
-            'id' => (string) $data->id,
-            'pembeli' => $data->pembeli,
-            'catatan' => $data->catatan,
-            'tanggal_keluar' => $data->tanggal_keluar,
-            'total_harga' => $data->total_harga,
-            'barang' => $data->items->map(function ($barang) {
-                return [
-                    'nama' => $barang->nama,
-                    'harga' => $barang->harga,
-                    'jumlah_stok_keluar' => $barang->jumlah_stok_keluar,
-                    'total_stok' => $barang->total_stok,
-                ];
-            }),
-        ];
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Stock-out berhasil ditambahkan',
-            'data' => $responseData
-        ], 201);
     }
 
     /**
