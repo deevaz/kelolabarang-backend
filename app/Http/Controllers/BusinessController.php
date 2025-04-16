@@ -55,8 +55,8 @@ class BusinessController extends Controller
         $data->mata_uang = $request->mata_uang;
 
         if ($request->hasFile('gambar_bisnis')) {
-            $gambarPath = $request->file('gambar_bisnis')->store('gambar_bisnis', 'public');
-            $data->gambar_bisnis = $gambarPath;
+        $gambarPath = $request->file('gambar_bisnis')->store('gambar_bisnis', 'public');
+        $data->gambar_bisnis = 'https://kelola.abdaziz.my.id/' . $gambarPath;
         }
 
         $data->user_id = $userId;

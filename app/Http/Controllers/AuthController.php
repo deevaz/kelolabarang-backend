@@ -114,6 +114,10 @@ class AuthController extends Controller
 
         $user->save();
 
+        if ($user->profile_picture) {
+            $user->profile_picture = 'https://kelola.abdaziz.my.id/' . $user->profile_picture;
+        }
+
         return response()->json([
             'message' => 'Profil berhasil di perbarui',
             'user'    => $user,
