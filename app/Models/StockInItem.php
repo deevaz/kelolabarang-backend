@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StockInItems extends Model
+class StockInItem extends Model
 {
     use HasFactory;
 
@@ -23,5 +23,6 @@ class StockInItems extends Model
     {
         return $this->belongsTo(StockIn::class, 'stock_in_id');
     }
+
 
 }

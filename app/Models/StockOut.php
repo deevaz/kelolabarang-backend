@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\StockOutItems;
+use App\Models\StockOutItem;
 
 class StockOut extends Model
 {
@@ -22,6 +22,6 @@ class StockOut extends Model
 
     public function items()
     {
-        return $this->hasMany(StockOutItems::class);
+        return $this->hasMany(StockOutItem::class);
     }
 }

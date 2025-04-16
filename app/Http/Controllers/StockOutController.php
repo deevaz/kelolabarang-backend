@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Models\StockOut;
-use App\Models\StockOutItems;
+use App\Models\StockOutItem;
 use Illuminate\Support\Facades\DB;
-use App\Models\Products;
+use App\Models\Product;
 
 class StockOutController extends Controller
 {
@@ -32,6 +32,7 @@ class StockOutController extends Controller
                 'catatan' => $item->catatan,
                 'total_harga' => $item->total_harga,
                 'tanggal_keluar' => $item->tanggal_keluar,
+                'total_keluar' => $item->items->sum('jumlah_stok_keluar'),
                 'barang' => $item->items->map(function ($barang) {
                     return [
                         'nama' => $barang->nama,
@@ -88,7 +89,7 @@ class StockOutController extends Controller
 
             $barangData = [];
             foreach ($request->barang as $item) {
-                $product = Products::where('nama_barang', $item['nama'])->first();
+                $product = Product::where('nama_barang', $item['nama'])->first();
 
                 if ($product) {
                     $product->decrement('total_stok', $item['jumlah_stok_keluar']);

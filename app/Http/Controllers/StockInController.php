@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\StockIn;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-use App\Models\StockInItems;
+use App\Models\StockInItem;
 use Illuminate\Support\Facades\DB;
-use App\Models\Products;
+use App\Models\Product;
 
 class StockInController extends Controller
 {
@@ -35,6 +35,7 @@ class StockInController extends Controller
                 'catatan' => $item->catatan,
                 'total_harga' => $item->total_harga,
                 'tanggal_masuk' => $item->tanggal_masuk,
+                'total_masuk' => $item->items->sum('jumlah_stok_masuk'),
                 'barang' => $item->items->map(function ($barang) {
                     return [
                         'nama' => $barang->nama,
@@ -90,13 +91,13 @@ class StockInController extends Controller
         $stockIn->user_id = $userId;
         $stockIn->save();
 
-        // Prepare array to hold StockInItems
+        // Prepare array to hold StockInItem
         $barangData = [];
 
         // Process each incoming barang item
         foreach ($request->barang as $item) {
             // Find the product by nama
-            $product = Products::where('nama_barang', $item['nama'])->first();
+            $product = Product::where('nama_barang', $item['nama'])->first();
 
             if ($product) {
                 // Update the total_stok by incrementing with jumlah_stok_masuk
@@ -123,7 +124,7 @@ class StockInController extends Controller
             }
 
             // Add to barangData array
-            $barangData[] = new StockInItems([
+            $barangData[] = new StockInItem([
                 'nama' => $item['nama'],
                 'harga' => $item['harga'],
                 'jumlah_stok_masuk' => $item['jumlah_stok_masuk'],
@@ -132,7 +133,7 @@ class StockInController extends Controller
             ]);
         }
 
-        // Save all StockInItems
+        // Save all StockInItem
         $stockIn->items()->saveMany($barangData);
 
         // Commit the transaction

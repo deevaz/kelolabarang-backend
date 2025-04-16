@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\StockInItems;
+use App\Models\StockInItem;
 
 class StockIn extends Model
 {
@@ -22,6 +22,6 @@ class StockIn extends Model
 
     public function items()
     {
-        return $this->hasMany(StockInItems::class);
+        return $this->hasMany(StockInItem::class);
     }
 }

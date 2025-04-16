@@ -2,40 +2,36 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
 use App\Models\StockIn;
-use Illuminate\Support\Facades\DB;
+use App\Models\StockInItem;
 
 class StockInSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        DB::table('stockIn')->truncate();
+        $user = User::first() ?? User::factory()->create();
 
-        StockIn::create([
-            'product_id' => 4,
-            'supplier_id' => 1,
-            'jumlah_stok_masuk' => 50,
-            'total_stok' => 150,
-            'tanggal_masuk' => now(),
-            'catatan' => 'Initial stock entry',
-            'total_harga' => 500000,
-            'user_id' => 4,
-        ]);
+        StockIn::factory()
+            ->count(10)
+            ->create(['user_id' => $user->id])
+            ->each(function ($stockIn) use ($user) {
+                $items = StockInItem::factory()
+                    ->count(rand(1, 3))
+                    ->make(['user_id' => $user->id]);
 
-        StockIn::create([
-            'product_id' => 5,
-            'supplier_id' => 7,
-            'jumlah_stok_masuk' => 30,
-            'total_stok' => 80,
-            'tanggal_masuk' => now(),
-            'catatan' => 'Restocking',
-            'total_harga' => 300000,
-            'user_id' => 4,
-        ]);
+                $totalHarga = 0;
+
+                $items->each(function ($item) use ($stockIn, &$totalHarga) {
+                    $item->stock_in_id = $stockIn->id;
+                    $item->save();
+
+                    $totalHarga += $item->harga * $item->jumlah_stok_masuk;
+                });
+
+                $stockIn->total_harga = $totalHarga;
+                $stockIn->save();
+            });
     }
 }

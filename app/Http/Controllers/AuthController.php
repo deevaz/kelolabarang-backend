@@ -21,7 +21,7 @@ class AuthController extends Controller
         $profilePicturePath = null;
         if ($request->hasFile('profile_picture')) {
             $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
-       }
+    }
 
         $user = User::create([
             'name' => $request->name,
@@ -46,8 +46,12 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
+        if (!User::where('username', $credentials['username'])->exists()) {
+            return response()->json(['error' => 'Username tidak ditemukan'], 404);
+        }
+
         if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Token tidak Valid'], 401);
+            return response()->json(['error' => 'Password salah'], 401);
         }
 
         return response()->json([

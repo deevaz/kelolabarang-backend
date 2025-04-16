@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Products;
+use App\Models\Product;
 
 class ProductController extends Controller
 {
@@ -12,7 +12,7 @@ class ProductController extends Controller
      */
     public function index($userId)
     {
-        $products = Products::where('user_id', $userId)->get();
+        $products = Product::where('user_id', $userId)->get();
         return response()->json([
             'status' => 'success',
             'message' => 'Produk berhasil diambil',
@@ -45,7 +45,7 @@ class ProductController extends Controller
 
         $data['user_id'] = $userId;
 
-        $product = Products::create($data);
+        $product = Product::create($data);
 
         return response()->json([
             'status' => 'success',
@@ -59,7 +59,7 @@ class ProductController extends Controller
      */
     public function show($userId, $id)
     {
-        $product = Products::where('user_id', $userId)->where('id', $id)->first();
+        $product = Product::where('user_id', $userId)->where('id', $id)->first();
 
         if (!$product) {
             return response()->json(['message' => 'Produk tidak ditemukan'], 404);
@@ -79,7 +79,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, $userId, $id)
     {
-        $product = Products::where('user_id', $userId)->where('id', $id)->first();
+        $product = Product::where('user_id', $userId)->where('id', $id)->first();
 
         if (!$product) {
             return response()->json([
@@ -105,7 +105,7 @@ class ProductController extends Controller
             $gambarPath = $request->file('gambar')->store('gambar_barang', 'public');
             $data['gambar'] = $gambarPath;
         }
-        $product = Products::find($request->id);
+        $product = Product::find($request->id);
 
         if ($product) {
             $product->kode_barang = $request->kode_barang;
@@ -140,7 +140,7 @@ class ProductController extends Controller
      */
     public function destroy($userId, $id)
     {
-        $product = Products::where('user_id', $userId)->where('id', $id)->first();
+        $product = Product::where('user_id', $userId)->where('id', $id)->first();
 
         if (!$product) {
             return response()->json(['message' => 'Produk tidak ditemukan'], 404);
