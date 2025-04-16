@@ -27,6 +27,8 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user', [AuthController::class, 'userProfile']);
+    Route::put('/user/{id}', [AuthController::class, 'updateProfile']);
+    Route::delete('/user/{id}', [AuthController::class, 'deleteAccount']);
 
     // crud products
     Route::get('/products/{userId}', [ProductController::class, 'index']);
