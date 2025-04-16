@@ -99,7 +99,7 @@ class StockOutController extends Controller
                         'message' => 'Barang tidak ditemukan: ' . $item['nama']
                     ], 404);
                 }
-                $barangData[] = new StockOutItems([
+                $barangData[] = new StockOutItem([
                     'stock_out_id' => $data->id,
                     'nama' => $item['nama'],
                     'harga' => $item['harga'],
