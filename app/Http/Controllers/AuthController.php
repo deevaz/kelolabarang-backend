@@ -106,7 +106,7 @@ class AuthController extends Controller
 
         if ($request->hasFile('profile_picture')) {
             $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
-            $user->profile_picture = $profilePicturePath;
+            $user->profile_picture = 'https://kelola.abdaziz.my.id/storage/' . $profilePicturePath;
         }
 
         if ($request->has('password')) {
