@@ -103,7 +103,7 @@ class ProductController extends Controller
 
         if ($request->hasFile('gambar')) {
             $gambarPath = $request->file('gambar')->store('gambar_barang', 'public');
-            $data['gambar'] = 'https://kelola.abdaziz.my.id/storage' . $gambarPath;
+            $data['gambar'] = 'https://kelola.abdaziz.my.id/storage/' . $gambarPath;
         }
         $product = Product::find($request->id);
 
