@@ -116,7 +116,7 @@ class ProductController extends Controller
             $product->kadaluarsa = $request->kadaluarsa;
             $product->deskripsi = $request->deskripsi;
             if ($gambarPath) {
-                $product->gambar = $gambarPath;
+                $product->gambar = 'https://kelola.abdaziz.my.id/storage/' . $gambarPath;
             }
             $product->kategori = $request->kategori;
             $product->total_stok = $request->total_stok;
