@@ -21,7 +21,8 @@ class AuthController extends Controller
         $profilePicturePath = null;
         if ($request->hasFile('profile_picture')) {
             $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
-    }
+            $profilePicturePath = 'https://kelola.abdaziz.my.id/' . $profilePicturePath;
+        }
 
         $user = User::create([
             'name' => $request->name,
