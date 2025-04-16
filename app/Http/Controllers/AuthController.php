@@ -21,7 +21,7 @@ class AuthController extends Controller
         $profilePicturePath = null;
         if ($request->hasFile('profile_picture')) {
             $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
-            $profilePicturePath = 'https://kelola.abdaziz.my.id/' . $profilePicturePath;
+            $profilePicturePath = 'https://kelola.abdaziz.my.id/storage' . $profilePicturePath;
         }
 
         $user = User::create([
@@ -116,7 +116,7 @@ class AuthController extends Controller
         $user->save();
 
         if ($user->profile_picture) {
-            $user->profile_picture = 'https://kelola.abdaziz.my.id/' . $user->profile_picture;
+            $user->profile_picture =  $user->profile_picture;
         }
 
         return response()->json([

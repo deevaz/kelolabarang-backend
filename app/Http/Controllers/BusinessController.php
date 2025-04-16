@@ -56,7 +56,7 @@ class BusinessController extends Controller
 
         if ($request->hasFile('gambar_bisnis')) {
         $gambarPath = $request->file('gambar_bisnis')->store('gambar_bisnis', 'public');
-        $data->gambar_bisnis = 'https://kelola.abdaziz.my.id/' . $gambarPath;
+        $data->gambar_bisnis = 'https://kelola.abdaziz.my.id/storage' . $gambarPath;
         }
 
         $data->user_id = $userId;
