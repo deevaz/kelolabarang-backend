@@ -40,7 +40,7 @@ class ProductController extends Controller
         $gambarPath = null;
         if ($request->hasFile('gambar')) {
             $gambarPath = $request->file('gambar')->store('gambar_barang', 'public');
-            $data['gambar'] = 'https://kelola.abdaziz.my.id/storage' . $gambarPath;
+            $data['gambar'] = 'https://kelola.abdaziz.my.id/storage/' . $gambarPath;
         }
 
         $data['user_id'] = $userId;
