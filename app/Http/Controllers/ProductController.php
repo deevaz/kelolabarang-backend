@@ -74,6 +74,23 @@ class ProductController extends Controller
         );
     }
 
+
+    // Show product by category
+    public function showByCategory($userId, $category)
+    {
+        $products = Product::where('user_id', $userId)->where('kategori', $category)->get();
+
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'Produk tidak ditemukan'], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => "Kategori {$category} berhasil diambil",
+            'data' => $products
+        ], 200);
+    }
+
     /**
      * Update the specified resource in storage.
      */
