@@ -169,4 +169,66 @@ class ProductController extends Controller
             'status' => 'success',
             'message' => 'Produk berhasil dihapus']);
     }
+
+    // Profit
+    public function getProfit($userId)
+    {
+        $products = Product::where('user_id', $userId)->get();
+
+        $totalProfit = 0;
+        $profitDetails = [];
+
+        foreach ($products as $product) {
+            $profitPerItem = $product->harga_jual - $product->harga_beli;
+            $totalProductProfit = $profitPerItem * $product->total_stok;
+
+            $profitDetails[] = [
+                'nama_barang' => $product->nama_barang,
+                'profit_per_item' => $profitPerItem,
+                'total_stok' => $product->total_stok,
+                'total_profit' => $totalProductProfit,
+            ];
+
+            $totalProfit += $totalProductProfit;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data profit berhasil diambil',
+            'total_profit' => $totalProfit,
+            'data' => $profitDetails
+        ], 200);
+    }
+
+    // Profit by date range
+    public function getProfitByDate($userId, $startDate, $endDate)
+    {
+        $products = Product::where('user_id', $userId)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
+
+        $totalProfit = 0;
+        $profitDetails = [];
+
+        foreach ($products as $product) {
+            $profitPerItem = $product->harga_jual - $product->harga_beli;
+            $totalProductProfit = $profitPerItem * $product->total_stok;
+
+            $profitDetails[] = [
+                'nama_barang' => $product->nama_barang,
+                'profit_per_item' => $profitPerItem,
+                'total_stok' => $product->total_stok,
+                'total_profit' => $totalProductProfit,
+            ];
+
+            $totalProfit += $totalProductProfit;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data profit berdasarkan tanggal berhasil diambil',
+            'total_profit' => $totalProfit,
+            'data' => $profitDetails
+        ], 200);
+    }
 }

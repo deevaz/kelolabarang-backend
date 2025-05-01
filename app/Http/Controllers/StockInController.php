@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\StockInItem;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use Carbon\Carbon;
 
 class StockInController extends Controller
 {
@@ -50,6 +51,65 @@ class StockInController extends Controller
         return response()->json($data, 200);
     }
 
+
+    /**
+     * Display a listing of the resource based on a date range.
+     */
+    public function getByDateRange(Request $request, $userId)
+    {
+        $rules = [
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak valid',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+
+        $stockIn = StockIn::with('items')
+            ->where('user_id', $userId)
+            ->whereBetween('tanggal_masuk', [$startDate, $endDate])
+            ->get();
+
+        if ($stockIn->isEmpty()) {
+            return response()->json([
+                'kode' => 204,
+                'status' => 'error',
+                'message' => 'Data stock-in tidak ditemukan dalam rentang tanggal'
+            ], 204);
+        }
+
+        $data = $stockIn->map(function ($item) {
+            return [
+                'id' => (string) $item->id,
+                'pemasok' => $item->pemasok,
+                'userId' => (string) $item->user_id,
+                'catatan' => $item->catatan,
+                'total_harga' => $item->total_harga,
+                'tanggal_masuk' => $item->tanggal_masuk,
+                'total_masuk' => $item->items->sum('jumlah_stok_masuk'),
+                'barang' => $item->items->map(function ($barang) {
+                    return [
+                        'nama' => $barang->nama,
+                        'harga' => $barang->harga,
+                        'jumlah_stok_masuk' => $barang->jumlah_stok_masuk,
+                        'total_stok' => $barang->total_stok,
+                    ];
+                }),
+            ];
+        });
+
+        return response()->json($data, 200);
+    }
     /**
      * Store a newly created resource in storage.
      */
