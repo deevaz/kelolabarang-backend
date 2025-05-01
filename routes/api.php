@@ -75,4 +75,6 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/stockout/{userId}/{id}', [StockOutController::class, 'show']);
     Route::put('/stockout/{userId}/{id}', [StockOutController::class, 'update']);
     Route::delete('/stockout/{userId}/{id}', [StockOutController::class, 'destroy']);
+
+    Route::get('/stock-out/by-date-range/{userId}', [StockOutController::class, 'getByDateRange']);
 });

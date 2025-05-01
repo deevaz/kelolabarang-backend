@@ -47,6 +47,63 @@ class StockOutController extends Controller
         return response()->json($data, 200);
     }
 
+
+    public function getByDateRange(Request $request, $userId)
+    {
+        $rules = [
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak valid',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+
+        $stockOut = StockOut::with('items')
+            ->where('user_id', $userId)
+            ->whereBetween('tanggal_keluar', [$startDate, $endDate])
+            ->get();
+
+        if ($stockOut->isEmpty()) {
+            return response()->json([
+                'kode' => 204,
+                'status' => 'error',
+                'message' => 'Data stock-out tidak ditemukan dalam rentang tanggal'
+            ], 204);
+        }
+
+        $data = $stockOut->map(function ($item) {
+            return [
+                'id' => (string) $item->id,
+                'pembeli' => $item->pembeli,
+                'userId' => (string) $item->user_id,
+                'catatan' => $item->catatan,
+                'total_harga' => $item->total_harga,
+                'tanggal_keluar' => $item->tanggal_keluar,
+                'total_keluar' => $item->items->sum('jumlah_stok_keluar'),
+                'barang' => $item->items->map(function ($barang) {
+                    return [
+                        'nama' => $barang->nama,
+                        'harga' => $barang->harga,
+                        'jumlah_stok_keluar' => $barang->jumlah_stok_keluar,
+                        'total_stok' => $barang->total_stok,
+                    ];
+                }),
+            ];
+        });
+
+        return response()->json($data, 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
