@@ -28,6 +28,8 @@ Route::middleware(['jwt.auth'])->group(function () {
     // ! ganti password
     Route::post('/change-password', [AuthController::class, 'changePassword']);
 
+    // ! LUPAS PASSWORD
+
     // ! Get profit
     Route::get('/profit/{userId}', [ProductController::class, 'getProfit']);
     Route::get('/profit/{userId}/{startDate}/{endDate}', [ProductController::class, 'getProfitByDate']);
@@ -66,9 +68,7 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/stockin/{userId}/{id}', [StockInController::class, 'show']);
     Route::put('/stockin/{userId}/{id}', [StockInController::class, 'update']);
     Route::delete('/stockin/{userId}/{id}', [StockInController::class, 'destroy']);
-
     Route::get('/stock-in/by-date-range/{userId}', [StockInController::class, 'getByDateRange']);
-
 
     //! crud stock-out
     Route::get('/stockout/{userId}', [StockOutController::class, 'index']);

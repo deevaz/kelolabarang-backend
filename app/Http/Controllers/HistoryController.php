@@ -28,8 +28,8 @@ class HistoryController extends Controller
                     'tanggal_masuk' => $item->tanggal_masuk,
                     'tanggal' => $item->tanggal_masuk,
                     'tipe' => 'masuk',
-                    'isStokMasuk' => true,
-                    'isStokKeluar' => false,
+                    // 'isStokMasuk' => true,
+                    // 'isStokKeluar' => false,
                     'total_masuk' => $item->items->sum('jumlah_stok_masuk'),
                     'barang' => $item->items->map(function ($barang) {
                         return [
@@ -55,8 +55,8 @@ class HistoryController extends Controller
                     'tanggal_keluar' => $item->tanggal_keluar,
                     'tanggal' => $item->tanggal_keluar,
                     'tipe' => 'keluar',
-                    'isStokMasuk' => false,
-                    'isStokKeluar' => true,
+                    // 'isStokMasuk' => false,
+                    // 'isStokKeluar' => true,
                     'total_keluar' => $item->items->sum('jumlah_stok_keluar'),
                     'barang' => $item->items->map(function ($barang) {
                         return [
@@ -110,8 +110,8 @@ class HistoryController extends Controller
             return [
                 // 'tanggal' => $item->tanggal_keluar->toIso8601String(),
                 'tipe' => 'keluar',
-                'isStokMasuk' => false,
-                'isStokKeluar' => true,
+                // 'isStokMasuk' => false,
+                // 'isStokKeluar' => true,
                 'id' => (string) $item->id,
                 'pemasok' => null,
                 'pembeli' => $item->pembeli,
@@ -139,8 +139,8 @@ class HistoryController extends Controller
             return [
                 'tanggal' => $item->tanggal_masuk->toIso8601String(),
                 'tipe' => 'masuk',
-                'isStokMasuk' => true,
-                'isStokKeluar' => false,
+                // 'isStokMasuk' => true,
+                // 'isStokKeluar' => false,
                 'id' => (string) $item->id,
                 'pemasok' => $item->pemasok,
                 'pembeli' => null,
@@ -168,6 +168,4 @@ class HistoryController extends Controller
 
         return response()->json($data, 200);
     }
-
-
 }
