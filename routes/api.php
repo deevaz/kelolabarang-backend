@@ -8,6 +8,7 @@ use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\StockInController;
 use App\Http\Controllers\StockOutController;
+use App\Http\Controllers\HistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,4 +78,9 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::delete('/stockout/{userId}/{id}', [StockOutController::class, 'destroy']);
 
     Route::get('/stock-out/by-date-range/{userId}', [StockOutController::class, 'getByDateRange']);
+
+    //! History
+    Route::get('/history/{userId}', [HistoryController::class, 'getHistory']);
+    Route::get('/history/by-date-range/{userId}', [HistoryController::class, 'getFilteredHistory']);
+
 });
