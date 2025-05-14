@@ -35,7 +35,7 @@ class HistoryController extends Controller
                             'nama' => $barang->nama,
                             'harga' => $barang->harga,
                             'jumlah_stok_masuk' => $barang->jumlah_stok_masuk,
-                            'total_stok' => $barang->total_stok,
+                            // 'total_stok' => $barang->total_stok,
                         ];
                     }),
                 ];
@@ -62,7 +62,7 @@ class HistoryController extends Controller
                             'nama' => $barang->nama,
                             'harga' => $barang->harga,
                             'jumlah_stok_keluar' => $barang->jumlah_stok_keluar,
-                            'total_stok' => $barang->total_stok,
+                            // 'total_stok' => $barang->total_stok,
                         ];
                     }),
                 ];
@@ -127,7 +127,7 @@ class HistoryController extends Controller
                         'harga' => $barang->harga,
                         'jumlah_stok_masuk' => null,
                         'jumlah_stok_keluar' => $barang->jumlah_stok_keluar,
-                        'total_stok' => $barang->total_stok,
+                        // 'total_stok' => $barang->total_stok,
                     ];
                 }),
             ];
@@ -156,7 +156,7 @@ class HistoryController extends Controller
                         'harga' => $barang->harga,
                         'jumlah_stok_masuk' => $barang->jumlah_stok_masuk,
                         'jumlah_stok_keluar' => null,
-                        'total_stok' => $barang->total_stok,
+                        // 'total_stok' => $barang->total_stok,
                     ];
                 }),
             ];
