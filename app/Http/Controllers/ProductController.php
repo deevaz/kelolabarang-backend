@@ -28,14 +28,13 @@ class ProductController extends Controller
         $data = $request->validate([
             'kode_barang' => 'nullable|string',
             'nama_barang' => 'required|string',
-            'stok_awal' => 'required|integer',
+            'stok' => 'nullable|integer',
             'harga_beli' => 'required|numeric',
             'harga_jual' => 'required|numeric',
-            'kadaluarsa' => 'required|date',
+            'kadaluarsa' => 'nullable|date',
             'deskripsi' => 'nullable|string',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'kategori' => 'nullable|string',
-            'total_stok' => 'required|integer',
         ]);
         $gambarPath = null;
         if ($request->hasFile('gambar')) {
@@ -105,18 +104,19 @@ class ProductController extends Controller
         }
 
         $data = $request->validate([
-            'kode_barang' => 'required|string',
+            'kode_barang' => 'nullable|string',
             'nama_barang' => 'required|string',
-            'stok_awal' => 'required|integer',
+            'stok' => 'nullable|integer',
             'harga_beli' => 'required|numeric',
             'harga_jual' => 'required|numeric',
             'kadaluarsa' => 'required|date',
-            'deskripsi' => 'required|string',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'deskripsi' => 'nullable|string',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'kategori' => 'required|string',
-            'total_stok' => 'required|integer',
 
         ]);
+
+        $gambarPath = null;
 
         if ($request->hasFile('gambar')) {
             $gambarPath = $request->file('gambar')->store('gambar_barang', 'public');
@@ -127,7 +127,7 @@ class ProductController extends Controller
         if ($product) {
             $product->kode_barang = $request->kode_barang;
             $product->nama_barang = $request->nama_barang;
-            $product->stok_awal = $request->stok_awal;
+            $product->stok = $request->stok;
             $product->harga_beli = $request->harga_beli;
             $product->harga_jual = $request->harga_jual;
             $product->kadaluarsa = $request->kadaluarsa;
@@ -136,8 +136,6 @@ class ProductController extends Controller
                 $product->gambar = 'https://kelola.abdaziz.my.id/storage/' . $gambarPath;
             }
             $product->kategori = $request->kategori;
-            $product->total_stok = $request->total_stok;
-
 
             $product->save();
 
@@ -180,12 +178,12 @@ class ProductController extends Controller
 
         foreach ($products as $product) {
             $profitPerItem = $product->harga_jual - $product->harga_beli;
-            $totalProductProfit = $profitPerItem * $product->total_stok;
+            $totalProductProfit = $profitPerItem * $product->stok;
 
             $profitDetails[] = [
                 'nama_barang' => $product->nama_barang,
                 'profit_per_item' => $profitPerItem,
-                'total_stok' => $product->total_stok,
+                'stok' => $product->stok,
                 'total_profit' => $totalProductProfit,
             ];
 

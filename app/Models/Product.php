@@ -12,7 +12,7 @@ class Product extends Model
     protected $fillable = [
         'kode_barang',
         'nama_barang',
-        'stok_awal',
+        'stok',
         'harga_beli',
         'harga_jual',
         'kadaluarsa',
@@ -20,7 +20,6 @@ class Product extends Model
         'vendor',
         'gambar',
         'kategori',
-        'total_stok',
         'user_id',
     ];
 }

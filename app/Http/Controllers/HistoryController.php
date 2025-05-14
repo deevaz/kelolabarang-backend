@@ -16,7 +16,6 @@ class HistoryController extends Controller
 
         $data = [];
 
-
         if (!$stockIn->isEmpty()) {
             $data = array_merge($data, $stockIn->map(function ($item) {
                 return [

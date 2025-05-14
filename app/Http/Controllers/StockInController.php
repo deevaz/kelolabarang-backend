@@ -42,7 +42,7 @@ class StockInController extends Controller
                         'nama' => $barang->nama,
                         'harga' => $barang->harga,
                         'jumlah_stok_masuk' => $barang->jumlah_stok_masuk,
-                        'total_stok' => $barang->total_stok,
+                        // 'total_stok' => $barang->total_stok,
                     ];
                 }),
             ];
@@ -102,7 +102,7 @@ class StockInController extends Controller
                         'nama' => $barang->nama,
                         'harga' => $barang->harga,
                         'jumlah_stok_masuk' => $barang->jumlah_stok_masuk,
-                        'total_stok' => $barang->total_stok,
+                        // 'total_stok' => $barang->total_stok,
                     ];
                 }),
             ];
@@ -126,7 +126,7 @@ class StockInController extends Controller
         'barang.*.nama' => 'required|string|max:255',
         'barang.*.harga' => 'required|numeric',
         'barang.*.jumlah_stok_masuk' => 'required|integer',
-        'barang.*.total_stok' => 'required|integer',
+        // 'barang.*.total_stok' => 'nullable|integer',
     ];
 
     $validator = Validator::make($request->all(), $rules);
@@ -162,7 +162,7 @@ class StockInController extends Controller
 
             if ($product) {
                 // Update the total_stok by incrementing with jumlah_stok_masuk
-                $product->increment('total_stok', $item['jumlah_stok_masuk']);
+                $product->increment('stok', $item['jumlah_stok_masuk']);
                 // Log the stock-in update for the product
                 Storage::append('logs/stock_in_updates.log', '[' . now() . '] Product updated: ' . $product->nama_barang . ', Incremented by: ' . $item['jumlah_stok_masuk']);
             } else {
@@ -189,7 +189,7 @@ class StockInController extends Controller
                 'nama' => $item['nama'],
                 'harga' => $item['harga'],
                 'jumlah_stok_masuk' => $item['jumlah_stok_masuk'],
-                'total_stok' => $item['total_stok'],
+                // 'total_stok' => $item['total_stok'],
                 'user_id' => $userId,
             ]);
         }
@@ -207,7 +207,7 @@ class StockInController extends Controller
                     'nama' => $barang->nama,
                     'harga' => $barang->harga,
                     'jumlah_stok_masuk' => $barang->jumlah_stok_masuk,
-                    'total_stok' => $barang->total_stok,
+                    // 'total_stok' => $barang->total_stok,
                 ];
             }),
             'tanggal_masuk' => $stockIn->tanggal_masuk,

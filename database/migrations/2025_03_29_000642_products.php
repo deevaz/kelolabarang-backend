@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('kode_barang')->nullable();
             $table->string('nama_barang');
-            $table->integer('stok_awal');
+            $table->integer('stok')->default(0);
             $table->bigInteger('harga_beli');
             $table->bigInteger('harga_jual');
             // $table->bigInteger('harga_grosir');
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->text('deskripsi')->nullable();
             $table->string('gambar')->nullable();
             $table->string('kategori');
-            $table->integer('total_stok')->default(0);
+            // $table->integer('total_stok')->default(0);
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
 

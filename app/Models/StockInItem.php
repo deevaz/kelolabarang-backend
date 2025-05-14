@@ -15,7 +15,7 @@ class StockInItem extends Model
         'nama',
         'harga',
         'jumlah_stok_masuk',
-        'total_stok',
+        // 'total_stok',
         'user_id',
     ];
 
