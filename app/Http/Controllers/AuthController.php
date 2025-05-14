@@ -125,9 +125,16 @@ class AuthController extends Controller
         ]);
     }
 
-    public function deleteAccount()
+    public function deleteAccount(Request $request)
     {
         $user = auth()->user();
+
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(['error' => 'Password salah'], 401);
+        }
 
         if (!$user) {
             return response()->json(['error' => 'User tidak terautentikasi'], 401);
