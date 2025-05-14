@@ -14,7 +14,7 @@ class StockInItemFactory extends Factory
             'nama' => $this->faker->word,
             'harga' => $harga,
             'jumlah_stok_masuk' => $jumlah,
-            'total_stok' => $jumlah, // anggap baru masuk semua
+            // 'total_stok' => $jumlah, // anggap baru masuk semua
             'user_id' => 1, // nanti diganti di Seeder
             'stock_in_id' => null, // di-set di Seeder
         ];

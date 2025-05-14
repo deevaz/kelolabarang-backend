@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('nama');
             $table->decimal('harga', 15, 2);
             $table->integer('jumlah_stok_keluar');
-            $table->integer('total_stok');
+            // $table->integer('total_stok');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

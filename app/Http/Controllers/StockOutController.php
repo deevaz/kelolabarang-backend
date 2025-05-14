@@ -38,7 +38,6 @@ class StockOutController extends Controller
                         'nama' => $barang->nama,
                         'harga' => $barang->harga,
                         'jumlah_stok_keluar' => $barang->jumlah_stok_keluar,
-                        'total_stok' => $barang->total_stok,
                     ];
                 }),
             ];
@@ -95,7 +94,6 @@ class StockOutController extends Controller
                         'nama' => $barang->nama,
                         'harga' => $barang->harga,
                         'jumlah_stok_keluar' => $barang->jumlah_stok_keluar,
-                        'total_stok' => $barang->total_stok,
                     ];
                 }),
             ];
@@ -117,12 +115,11 @@ class StockOutController extends Controller
             'tanggal_keluar' => 'required|date',
             'catatan' => 'nullable|string|max:255',
 
-
             'barang' => 'required|array',
             'barang.*.nama' => 'required|string|max:255',
             'barang.*.harga' => 'required|numeric',
             'barang.*.jumlah_stok_keluar' => 'required|numeric',
-            'barang.*.total_stok' => 'required|numeric',
+
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -149,7 +146,7 @@ class StockOutController extends Controller
                 $product = Product::where('nama_barang', $item['nama'])->first();
 
                 if ($product) {
-                    $product->decrement('total_stok', $item['jumlah_stok_keluar']);
+                    $product->decrement('stok', $item['jumlah_stok_keluar']);
                 } else {
                     return response()->json([
                         'status' => 'error',
@@ -161,7 +158,6 @@ class StockOutController extends Controller
                     'nama' => $item['nama'],
                     'harga' => $item['harga'],
                     'jumlah_stok_keluar' => $item['jumlah_stok_keluar'],
-                    'total_stok' => $item['total_stok'],
                     'user_id' => $userId,
                 ]);
             }
@@ -181,7 +177,6 @@ class StockOutController extends Controller
                         'nama' => $barang->nama,
                         'harga' => $barang->harga,
                         'jumlah_stok_keluar' => $barang->jumlah_stok_keluar,
-                        'total_stok' => $barang->total_stok,
                     ];
                 }),
             ];

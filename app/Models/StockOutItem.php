@@ -15,7 +15,6 @@ class StockOutItem extends Model
         'nama',
         'harga',
         'jumlah_stok_keluar',
-        'total_stok',
         'user_id',
     ];
 
