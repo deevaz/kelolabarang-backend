@@ -166,4 +166,19 @@ class AuthController extends Controller
         return response()->json(['message' => 'Password berhasil diubah']);
     }
 
+    public function getUserById($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User tidak ditemukan'], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User berhasil diambil',
+            'data' => $user
+        ], 200);
+    }
+
 }

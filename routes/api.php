@@ -34,11 +34,13 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/profit/{userId}', [ProductController::class, 'getProfit']);
     Route::get('/profit/{userId}/{startDate}/{endDate}', [ProductController::class, 'getProfitByDate']);
 
+    // ! USER
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user', [AuthController::class, 'userProfile']);
     Route::put('/user/edit/{id}', [AuthController::class, 'updateProfile']);
     Route::delete('/user/{id}', [AuthController::class, 'deleteAccount']);
+    Route::get('/user/{id}', [AuthController::class, 'getUserById']);
 
     //! crud products
     Route::get('/products/{userId}', [ProductController::class, 'index']);
