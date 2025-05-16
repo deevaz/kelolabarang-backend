@@ -28,7 +28,7 @@ Route::middleware(['jwt.auth'])->group(function () {
     // ! ganti password
     Route::post('/change-password', [AuthController::class, 'changePassword']);
 
-    // ! LUPAS PASSWORD
+    // ! LUPA PASSWORD
 
     // ! Get profit
     Route::get('/profit/{userId}', [ProductController::class, 'getProfit']);
@@ -37,7 +37,7 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user', [AuthController::class, 'userProfile']);
-    Route::put('/user/{id}', [AuthController::class, 'updateProfile']);
+    Route::put('/user/edit/{id}', [AuthController::class, 'updateProfile']);
     Route::delete('/user/{id}', [AuthController::class, 'deleteAccount']);
 
     //! crud products
