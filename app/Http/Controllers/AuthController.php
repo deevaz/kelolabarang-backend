@@ -173,11 +173,11 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User tidak ditemukan'], 404);
         }
-
+        $token = JWTAuth::fromUser($user);
         return response()->json([
-            'status' => 'success',
             'message' => 'User berhasil diambil',
-            'data' => $user
+            'user' => $user,
+            'token' => $token
         ], 200);
     }
 
