@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\StockIn;
 use App\Models\StockOut;
-
+use Illuminate\Support\Facades\Validator;
 
 class HistoryController extends Controller
 {
@@ -86,11 +86,17 @@ class HistoryController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ];
+        $validator = Validator::make($request->all(), $rules);
 
-
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak valid',
+                'errors' => $validator->errors()
+            ], 422);
+        }
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-
 
         $stockOut = StockOut::with('items')
             ->where('user_id', $userId)
@@ -107,7 +113,7 @@ class HistoryController extends Controller
 
         $stockOutData = $stockOut->map(function ($item) {
             return [
-                // 'tanggal' => $item->tanggal_keluar->toIso8601String(),
+                'tanggal' => $item->tanggal_keluar,
                 'tipe' => 'keluar',
                 // 'isStokMasuk' => false,
                 // 'isStokKeluar' => true,
@@ -136,7 +142,7 @@ class HistoryController extends Controller
 
         $stockInData = $stockIn->map(function ($item) {
             return [
-                'tanggal' => $item->tanggal_masuk->toIso8601String(),
+                'tanggal' => $item->tanggal_masuk,
                 'tipe' => 'masuk',
                 // 'isStokMasuk' => true,
                 // 'isStokKeluar' => false,
@@ -146,7 +152,7 @@ class HistoryController extends Controller
                 'userId' => (string) $item->user_id,
                 'catatan' => $item->catatan,
                 'total_harga' => $item->total_harga,
-                'tanggal_masuk' => $item->tanggal_masuk->toIso8601String(),
+                'tanggal_masuk' => $item->tanggal_masuk,
                 'tanggal_keluar' => null,
                 'total_masuk' => $item->items->sum('jumlah_stok_masuk'),
                 'total_keluar' => null,
