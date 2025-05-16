@@ -17,7 +17,7 @@ class StockOutController extends Controller
      */
     public function index($userId)
     {
-        $stockOut = StockOut::with('items')->where('user_id', $userId)->get();
+        $stockOut = StockOut::with('items')->where('user_id', $userId)->orderBy('created_at', 'DESC')->get();
         if ($stockOut->isEmpty()) {
             return response()->json([
                 'status' => 'error',
@@ -69,6 +69,7 @@ class StockOutController extends Controller
 
         $stockOut = StockOut::with('items')
             ->where('user_id', $userId)
+            ->orderBy('created_at', 'DESC')
             ->whereBetween('tanggal_keluar', [$startDate, $endDate])
             ->get();
 

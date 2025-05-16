@@ -12,7 +12,8 @@ class ProductController extends Controller
      */
     public function index($userId)
     {
-        $products = Product::where('user_id', $userId)->get();
+        $products = Product::where('user_id', $userId)->orderBy('created_at', 'DESC')->get();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Produk berhasil diambil',
@@ -77,7 +78,7 @@ class ProductController extends Controller
     // Show product by category
     public function showByCategory($userId, $category)
     {
-        $products = Product::where('user_id', $userId)->where('kategori', $category)->get();
+        $products = Product::where('user_id', $userId)->where('kategori', $category)->orderBy('created_at', 'DESC')->get();
 
         if ($products->isEmpty()) {
             return response()->json(['message' => 'Produk tidak ditemukan'], 404);

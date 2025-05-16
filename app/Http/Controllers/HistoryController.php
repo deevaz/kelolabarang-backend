@@ -11,8 +11,8 @@ class HistoryController extends Controller
 {
     public function getHistory($userId)
     {
-        $stockIn = StockIn::with('items')->where('user_id', $userId)->get();
-        $stockOut = StockOut::with('items')->where('user_id', $userId)->get();
+        $stockIn = StockIn::with('items')->where('user_id', $userId)->orderBy('tanggal_masuk', 'DESC')->get();
+        $stockOut = StockOut::with('items')->where('user_id', $userId)->orderBy('tanggal_keluar', 'DESC')->get();
 
         $data = [];
 
@@ -75,6 +75,7 @@ class HistoryController extends Controller
                 'message' => 'Data tidak ditemukan'
             ], 204);
         }
+        $data = collect($data)->sortByDesc('tanggal')->values()->all();
 
         return response()->json($data, 200);
     }
@@ -169,7 +170,9 @@ class HistoryController extends Controller
         });
 
 
-        $data = $stockOutData->merge($stockInData);
+        $data = $stockOutData->merge($stockInData)
+                ->sortByDesc('tanggal')
+                ->values();
 
         return response()->json($data, 200);
     }

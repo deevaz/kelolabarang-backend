@@ -18,7 +18,7 @@ class StockInController extends Controller
      */
     public function index($userId)
     {
-        $stockIn = StockIn::with('items')->where('user_id', $userId)->get();
+        $stockIn = StockIn::with('items')->where('user_id', $userId)->orderBy('created_at', 'DESC')->get();
 
         if ($stockIn->isEmpty()) {
             return response()->json([
@@ -76,6 +76,7 @@ class StockInController extends Controller
         $endDate = $request->end_date;
 
         $stockIn = StockIn::with('items')
+            ->orderBy('created_at', 'DESC')
             ->where('user_id', $userId)
             ->whereBetween('tanggal_masuk', [$startDate, $endDate])
             ->get();
